@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_mysqldb import MySQL
 
 #Se define la aplicación como un objeto de la clase Flask
@@ -13,10 +13,8 @@ mysql = MySQL(app)
 #Ruta principal
 @app.route('/')
 def Index():
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM usuario')
-    data = cur.fetchall()
-    return str(data)
+    return render_template('index.html')
+    
 
 
 #Bucle principal. La aplicación se corre en el puerto 3000.
