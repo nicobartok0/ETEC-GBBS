@@ -1,5 +1,5 @@
 from click import password_option
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, url_for, jsonify
 from flask_mysqldb import MySQL
 
 #Se define la aplicación como un objeto de la clase Flask
@@ -21,13 +21,22 @@ def Index():
 def add_contact():
     if request.method == 'POST':
         fullname = request.form['fullname']
+        username = request.form['username']
         password = request.form['password']
         email = request.form['email']
         cur = mysql.connection.cursor()
-        cur.execute('INSERT INTO usuario (nombre_usuario, email, contraseña) VALUES (%s, %s, %s)', 
-        (fullname, email, password))
-        mysql.connection.commit()
-        return render_template('index.html')
+        cur.execute('SELECT * FROM usuario WHERE nombre_usuario = ' + '"' + username + '"')
+        usuario_existente = cur.rowcount
+        cur.execute('SELECT * FROM usuario WHERE email = ' + '"' + email + '"')
+        email_existente = cur.rowcount
+        if usuario_existente <= 0 and email_existente <= 0:
+            
+            cur.execute('INSERT INTO usuario (nombre_completo, email, contraseña, nombre_usuario) VALUES (%s, %s, %s, %s)', 
+            (fullname, email, password, username))
+            mysql.connection.commit()
+            return render_template('index.html')
+        else:
+            return render_template('ex_user_already_exists.html')
 
 
     
