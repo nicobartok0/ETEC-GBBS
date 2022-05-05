@@ -1,12 +1,19 @@
 <html>
     <body>
         <h1>Pantalla principal de MBBS</h1>
-        <form action="/add_contact" method="POST">
-            <input type="text" name="fullname" placeholder="Nombre completo" />
-            <input type="email" name="email" placeholder="E-mail" />
-            <input type="password" name="password" placeholder="Contraseña" />
-            <input type="text" name="username" placeholder="Nombre de usuario"/>
+        <form action="/add_user" method="POST">
+            <h1>Registro</h1>
+            <input type="text" name="fullname" placeholder="Nombre completo" required/>
+            <input type="email" name="email" placeholder="E-mail" required/>
+            <input type="password" name="password" placeholder="Contraseña" required />
+            <input type="text" name="username" placeholder="Nombre de usuario" required/>
             <button type="submit">Registrarse</button>
+        </form>
+        <form action="/sign_in" method="POST">
+            <h1>Inicio de sesión</h1>
+            <input type="text" name="username" placeholder="Nombre de usuario" required/>
+            <input type="password" name="password" placeholder="Contraseña" required/>
+            <button type="submit">Iniciar sesión</button>
         </form>
     </body>
 </html>

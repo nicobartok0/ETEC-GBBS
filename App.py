@@ -17,8 +17,8 @@ def Index():
     return render_template('index.html')
 
 #Ruta de registro de contacto
-@app.route('/add_contact', methods=['POST'])
-def add_contact():
+@app.route('/add_user', methods=['POST'])
+def add_user():
     if request.method == 'POST':
         fullname = request.form['fullname']
         username = request.form['username']
@@ -37,6 +37,10 @@ def add_contact():
             return render_template('index.html')
         else:
             return render_template('ex_user_already_exists.html')
+
+@app.route('/sign_in', methods=['POST'])
+def sign_in():
+    return 'Sesión iniciada'
 
 
     
