@@ -40,7 +40,16 @@ def add_user():
 
 @app.route('/sign_in', methods=['POST'])
 def sign_in():
-    return 'Sesión iniciada'
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM usuario WHERE nombre_usuario =' + '"' + username + '"' + "AND contraseña =" + '"' + password + '"')
+        usuario_existente = cur.rowcount
+        if usuario_existente <= 0:
+            return render_template('ex_user_doesnt_exist.html')
+        else:
+            return 'Sesión iniciada'
 
 
     
