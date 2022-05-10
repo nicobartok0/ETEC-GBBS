@@ -1,3 +1,4 @@
+
 from click import password_option
 from flask import Flask, render_template, request, url_for, jsonify
 from flask_mysqldb import MySQL
@@ -38,6 +39,7 @@ def add_user():
         else:
             return render_template('ex_user_already_exists.html')
 
+#Ruta de inicio de sesión
 @app.route('/sign_in', methods=['POST'])
 def sign_in():
     if request.method == 'POST':
@@ -51,8 +53,23 @@ def sign_in():
         else:
             return 'Sesión iniciada'
 
-
-    
+#Ruta de foros
+@app.route('/forums')
+def forums():
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM foro')
+    data = cur.fetchall()
+    return render_template('foros.html', foros = data)
+@app.route('/add_forums', methods=['POST'])
+def add_forums():
+    if request.method == 'POST':
+        autor = request.form['autor']
+        titulo = request.form['titulo']
+        cuerpo = request.form['cuerpo']
+        cur = mysql.connection.cursor()
+        cur.execute('INSERT INTO foro (autor, cuerpo, titulo) VALUES (%s, %s, %s)', (autor, cuerpo, titulo))
+        mysql.connection.commit()
+    return forums()
 
 
 #Bucle principal. La aplicación se corre en el puerto 3000.

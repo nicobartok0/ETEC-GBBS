@@ -1,0 +1,27 @@
+<html>
+    <body>
+        <h1>Foros</h1>
+        <table>
+            <thead>
+                <td> Autor </td>
+                <td> Título </td>
+            </thead>
+            <tbody>
+            {%for foro in foros%}
+            <tr>
+                <td>{{foro.1}}</td>
+                <td>{{foro.3}}</td>
+            </tr>
+            {%endfor%}
+            </tbody>
+        </table>
+        <h2>Añadir Foros</h2>
+        <form action="/add_forums", method="POST">
+            <input type="text" name="autor" placeholder="Autor del Foro" required/>
+            <input type="text" name="titulo" placeholder="Título del artículo" required/>
+            <textarea name="cuerpo" id="" cols="30" rows="10"> </textarea required>
+            <button type="submit">Añadir foro</button>
+        </form>
+
+    </body>
+</html>
