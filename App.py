@@ -1,6 +1,6 @@
 
 from click import password_option
-from flask import Flask, render_template, request, url_for, jsonify
+from flask import Flask, render_template, request, url_for, jsonify, redirect
 from flask_mysqldb import MySQL
 
 #Se define la aplicación como un objeto de la clase Flask
@@ -51,7 +51,7 @@ def sign_in():
         if usuario_existente <= 0:
             return render_template('ex_user_doesnt_exist.html')
         else:
-            return 'Sesión iniciada'
+            return redirect(url_for('forums'))
 
 #Ruta para mostrar todos los foros
 @app.route('/forums')
@@ -66,8 +66,8 @@ def forums():
 def forum(id):
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM foro WHERE id =' + '"' + id + '"')
-    data = cur.fetchall()
-    return render_template('plantilla_foro.html', foro = data)
+    data = cur.fetchone()
+    return render_template('plantilla_foro.html', titulo_foro = data[3], cuerpo_foro = data[2])
 
 #Ruta para añadir un foro
 @app.route('/add_forums', methods=['POST'])
