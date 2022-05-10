@@ -9,8 +9,12 @@
             <tbody>
             {%for foro in foros%}
             <tr>
-                <td>{{foro.1}}</td>
-                <td>{{foro.3}}</td>
+                <td>
+                    {{foro.1}}
+                </td>
+                <td>
+                    <a href="/forum/{{foro.0}}">{{foro.3}}</a>
+                </td>
             </tr>
             {%endfor%}
             </tbody>

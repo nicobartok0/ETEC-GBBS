@@ -53,13 +53,23 @@ def sign_in():
         else:
             return 'Sesión iniciada'
 
-#Ruta de foros
+#Ruta para mostrar todos los foros
 @app.route('/forums')
 def forums():
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM foro')
     data = cur.fetchall()
     return render_template('foros.html', foros = data)
+
+#Ruta para mostrar un foro específico
+@app.route('/forum/<id>')
+def forum(id):
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM foro WHERE id =' + '"' + id + '"')
+    data = cur.fetchall()
+    return render_template('plantilla_foro.html', foro = data)
+
+#Ruta para añadir un foro
 @app.route('/add_forums', methods=['POST'])
 def add_forums():
     if request.method == 'POST':
