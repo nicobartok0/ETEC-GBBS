@@ -1,6 +1,6 @@
 
 from click import password_option
-from flask import Flask, render_template, request, url_for, jsonify, redirect
+from flask import Flask, render_template, request, session, url_for, jsonify, redirect
 from flask_mysqldb import MySQL
 
 #Se define la aplicación como un objeto de la clase Flask
@@ -12,10 +12,21 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'mbbs_db'
 mysql = MySQL(app)
 
-#Ruta principal
+#Ruta index (Inicio de sesión)
 @app.route('/')
 def Index():
     return render_template('index.html')
+
+#Ruta principal
+@app.route('/principal')
+def principal():
+    print(sesion)
+    return render_template('principal.html')
+
+@app.route('/user/<sesion[0]>')
+def user():
+    return sesion
+
 
 #Ruta de registro de contacto
 @app.route('/add_user', methods=['POST'])
@@ -51,7 +62,10 @@ def sign_in():
         if usuario_existente <= 0:
             return render_template('ex_user_doesnt_exist.html')
         else:
-            return redirect(url_for('forums'))
+            cur.execute('SELECT * FROM usuario WHERE nombre_usuario=' + '"' + username + '"')
+            global sesion
+            sesion = cur.fetchone()
+            return redirect(url_for('principal'))
 
 #Ruta para mostrar todos los foros
 @app.route('/forums')

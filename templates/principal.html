@@ -1,0 +1,10 @@
+{%extends 'layout.html'%}
+{%block body%}
+<h1>Pestaña principal</h1>
+<form action="/forums">
+    <button type="submit">Foros</button>
+</form>
+<form action="/user/{sesion[0]}">
+    <button type="submit">Usuario</button>
+</form>
+{%endblock%}
