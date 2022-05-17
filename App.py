@@ -1,5 +1,6 @@
 
 from click import password_option
+import os
 from flask import Flask, render_template, request, session, url_for, jsonify, redirect
 from flask_mysqldb import MySQL
 
@@ -23,10 +24,20 @@ def principal():
     print(sesion)
     return render_template('principal.html')
 
-@app.route('/user/<sesion[0]>')
-def user():
-    return sesion
+@app.route('/user')
+def usuario():
+    return render_template('usuario.html', nombre = sesion[1], email = sesion[2], nombre_usuario = sesion[4])
 
+
+@app.route('/subir_foto_de_perfil', methods=['POST'])
+def subir_foto_de_perfil():
+    if request.method == 'POST':
+        # obtenemos el archivo del input "archivo"
+        foto_perfil = request.files['archivo']
+        cur = mysql.connection.cursor()
+        cur.execute('INSERT INTO usuario (foto_perfil) VALUES (%s   )', (foto_perfil))
+        # Retornamos una respuesta satisfactoria
+        return render_template('usuario.html', foto = sesion[5])
 
 #Ruta de registro de contacto
 @app.route('/add_user', methods=['POST'])
@@ -87,7 +98,7 @@ def forum(id):
 @app.route('/add_forums', methods=['POST'])
 def add_forums():
     if request.method == 'POST':
-        autor = request.form['autor']
+        autor = sesion[4]
         titulo = request.form['titulo']
         cuerpo = request.form['cuerpo']
         cur = mysql.connection.cursor()

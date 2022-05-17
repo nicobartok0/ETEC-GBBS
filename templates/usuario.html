@@ -2,6 +2,14 @@
 {%block body%}
 <html>
     <h1>Usuario</h1>
-    <h1></h1>
+    <h2>Foto de perfil: <img src={{foto}} alt=""></h2>
+    <form action="/subir_foto_de_perfil" method="POST" enctype="multipart/form-data">
+        <input type="file" name="archivo">
+        <input type="submit">
+    </form>
+    <h2>Nombre de usuario: {{nombre_usuario}}</h2>
+    <h2>Email: {{email}}</h2>
+    <h2>Nombre completo: {{nombre}}</h2>
+    
 </html>
 {%endblock%}
