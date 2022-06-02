@@ -3,14 +3,17 @@ from click import password_option
 import os
 from flask import Flask, render_template, request, session, url_for, jsonify, redirect
 from flask_mysqldb import MySQL
+from werkzeug.utils import secure_filename
 
 #Se define la aplicación como un objeto de la clase Flask
 app = Flask(__name__)
+#Se define la carpeta donde se pueden subir archivos de imagen para las fotos de perfil
+app.config['UPLOAD_FOLDER'] = './fotos_de_perfil'
 #Configuración de servidor MySQL (CAMBIAR AL GENERAR LA APLICACIÓN FINAL)
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'mbbs_db'
+app.config['MYSQL_DB'] = 'gbbs_db'
 mysql = MySQL(app)
 
 #Ruta index (Inicio de sesión)
@@ -26,18 +29,22 @@ def principal():
 
 @app.route('/user')
 def usuario():
-    return render_template('usuario.html', nombre = sesion[1], email = sesion[2], nombre_usuario = sesion[4])
+    return render_template('usuario.html', nombre = sesion[1], email = sesion[2], nombre_usuario = sesion[4], foto_perfil = sesion[5] )
 
 
 @app.route('/subir_foto_de_perfil', methods=['POST'])
 def subir_foto_de_perfil():
     if request.method == 'POST':
         # obtenemos el archivo del input "archivo"
-        foto_perfil = request.files['archivo']
-        cur = mysql.connection.cursor()
-        cur.execute('INSERT INTO usuario (foto_perfil) VALUES (%s   )', (foto_perfil))
+        f = request.files['archivo']
+        sesion[5] = request.files['archivo']
+        filename = secure_filename(f.filename)
+        # Guardamos el archivo en el directorio "Archivos PDF"
+        f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
         # Retornamos una respuesta satisfactoria
-        return render_template('usuario.html', foto = sesion[5])
+        return render_template('usuario.html', nombre = sesion[1], email = sesion[2], nombre_usuario = sesion[4], foto_perfil = sesion[5])
+        
 
 #Ruta de registro de contacto
 @app.route('/add_user', methods=['POST'])
