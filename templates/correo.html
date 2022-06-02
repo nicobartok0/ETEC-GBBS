@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang=es>
+
+    <head>
+        <meta charset="UTF-08" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, inicial-scale=1.0" />
+        <title> Contacto </title> 
+    </head>
+    <body>
+        <h1>Contactenos</h1>
+
+
+            <form 
+                action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" 
+                method="POST">
+
+                <label for="nombre"> Nombre:  </label>
+                <input type="text" name="nombre" id="nombre"/>
+                <br/>
+               
+                <label for="email"> Email:  </label>
+                <input type="email" name="email" id="email"/>
+                <br/>
+                <label for="Mensaje"> Mensaje:  </label>
+                <textarea name="Mensaje" id="Mensaje"   cols="30" rows="10"></textarea>
+                <br/>
+                <input type="submit" id="EnviarCorreo" value="Enviar">
+
+            </form>
+            <script>
+                const btnEnvio = document.getElementById('EnviarCorreo');
+
+                btnEnvio.addEventListener('click', function(e) {e.preventDefault();
+                    const email=document.getElementById('email').value;
+                    const nombre=document.getElementById('nombre').value;
+                    const Mensaje=document.getElementById('Mensaje').value;
+        
+                    window.location.href=`mailto: ${email}?subject=${nombre}&body=Mensaje%3A%20${Mensaje}%0A`;
+                });
+            </script>
+    </body>
+</html>
