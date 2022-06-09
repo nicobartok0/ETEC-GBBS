@@ -37,11 +37,11 @@ def subir_foto_de_perfil():
     if request.method == 'POST':
         # obtenemos el archivo del input "archivo"
         f = request.files['archivo']
-        sesion[5] = request.files['archivo']
         filename = secure_filename(f.filename)
-        # Guardamos el archivo en el directorio "Archivos PDF"
+        # Guardamos el archivo en el directorio "fotos_de_perfil"
         f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
+        sesion[5] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        print(filename)
         # Retornamos una respuesta satisfactoria
         return render_template('usuario.html', nombre = sesion[1], email = sesion[2], nombre_usuario = sesion[4], foto_perfil = sesion[5])
         
