@@ -113,6 +113,11 @@ def add_forums():
         mysql.connection.commit()
     return forums()
 
+#Ruta de Correo
+@app.route('/correo')
+def usuario():
+    return render_template('correo.html')
+
 
 #Bucle principal. La aplicación se corre en el puerto 3000.
 if (__name__) == '__main__':
