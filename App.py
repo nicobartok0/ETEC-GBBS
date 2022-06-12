@@ -1,6 +1,7 @@
 
 from click import password_option
 import os
+from flask_socketio import SocketIO, send
 from flask import Flask, render_template, request, session, url_for, jsonify, redirect
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
@@ -15,6 +16,7 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'gbbs_db'
 mysql = MySQL(app)
+socketio = SocketIO(app)
 
 #Ruta index (Inicio de sesión)
 @app.route('/')
@@ -119,6 +121,19 @@ def usuario():
     return render_template('correo.html')
 
 
+@app.route('/chat')
+def index():
+    return render_template('chat.html')
+
+
+@socketio.on('message')
+def handleMessage(msg):
+    print('Message: ' + msg)
+    send(msg, broadcast = True)
+
+
+
 #Bucle principal. La aplicación se corre en el puerto 3000.
 if (__name__) == '__main__':
     app.run(port=3000, debug=True)
+    socketio.run(app)
