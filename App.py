@@ -30,8 +30,8 @@ def principal():
     return render_template('principal.html')
 
 @app.route('/user')
-def usuario():
-    return render_template('usuario.html', nombre = sesion[1], email = sesion[2], nombre_usuario = sesion[4], foto_perfil = sesion[5] )
+def usuario_():
+    return render_template('usuario.html', nombre = sesion[1], email = sesion[2], nombre_usuario = sesion[4], foto_perfil = foto_perfil )
 
 
 @app.route('/subir_foto_de_perfil', methods=['POST'])
@@ -42,10 +42,17 @@ def subir_foto_de_perfil():
         filename = secure_filename(f.filename)
         # Guardamos el archivo en el directorio "fotos_de_perfil"
         f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        sesion[5] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        foto_perfil = "/fotos_de_perfil/" + secure_filename(f.filename)
+        cur = mysql.connection.cursor()
+        pruebasql = 'UPDATE usuario SET foto_perfil = ' + '"' + foto_perfil + '"' + ' WHERE id = ' + '"' + str(sesion[0]) + '"'
+        cur.execute('UPDATE usuario SET foto_perfil = ' + '"' + foto_perfil + '"' + ' WHERE nombre_usuario = ' + '"' + sesion[4] + '"')
+        mysql.connection.commit()
+        print(pruebasql)
         print(filename)
+        print(foto_perfil)
+        
         # Retornamos una respuesta satisfactoria
-        return render_template('usuario.html', nombre = sesion[1], email = sesion[2], nombre_usuario = sesion[4], foto_perfil = sesion[5])
+        return render_template('usuario.html', nombre = sesion[1], email = sesion[2], nombre_usuario = sesion[4], foto_perfil = foto_perfil)
         
 
 #Ruta de registro de contacto
@@ -85,6 +92,10 @@ def sign_in():
             cur.execute('SELECT * FROM usuario WHERE nombre_usuario=' + '"' + username + '"')
             global sesion
             sesion = cur.fetchone()
+            cur.execute('SELECT foto_perfil FROM usuario WHERE nombre_usuario=' + '"' + username + '"')
+            global foto_perfil
+            foto_perfil = cur.fetchall()
+            print(foto_perfil, "test")
             return redirect(url_for('principal'))
 
 #Ruta para mostrar todos los foros
