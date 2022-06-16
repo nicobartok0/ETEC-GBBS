@@ -1,4 +1,5 @@
 
+from fileinput import filename
 from click import password_option
 import os
 from flask_socketio import SocketIO, send
@@ -9,7 +10,7 @@ from werkzeug.utils import secure_filename
 #Se define la aplicación como un objeto de la clase Flask
 app = Flask(__name__)
 #Se define la carpeta donde se pueden subir archivos de imagen para las fotos de perfil
-app.config['UPLOAD_FOLDER'] = './fotos_de_perfil'
+app.config['UPLOAD_FOLDER'] = './static/img'
 #Configuración de servidor MySQL (CAMBIAR AL GENERAR LA APLICACIÓN FINAL)
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -31,6 +32,13 @@ def principal():
 
 @app.route('/user')
 def usuario_():
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT foto_perfil FROM usuario WHERE nombre_usuario = ' + '"' + sesion[4] + '"')
+    filename = cur.fetchone()
+    print(filename)
+    print(str(filename))
+    foto_perfil = filename[0]
+    print(foto_perfil)
     return render_template('usuario.html', nombre = sesion[1], email = sesion[2], nombre_usuario = sesion[4], foto_perfil = foto_perfil )
 
 
@@ -40,14 +48,14 @@ def subir_foto_de_perfil():
         # obtenemos el archivo del input "archivo"
         f = request.files['archivo']
         filename = secure_filename(f.filename)
-        # Guardamos el archivo en el directorio "fotos_de_perfil"
+        # Guardamos el archivo en el directorio "/static/img"
         f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        foto_perfil = "/fotos_de_perfil/" + secure_filename(f.filename)
+        #Guardamos la ruta del archivo en una variable global llamada foto_perfil.
+        global foto_perfil
+        foto_perfil = url_for('static', filename='img/' + filename)
         cur = mysql.connection.cursor()
-        pruebasql = 'UPDATE usuario SET foto_perfil = ' + '"' + foto_perfil + '"' + ' WHERE id = ' + '"' + str(sesion[0]) + '"'
         cur.execute('UPDATE usuario SET foto_perfil = ' + '"' + foto_perfil + '"' + ' WHERE nombre_usuario = ' + '"' + sesion[4] + '"')
         mysql.connection.commit()
-        print(pruebasql)
         print(filename)
         print(foto_perfil)
         
