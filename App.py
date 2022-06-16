@@ -39,6 +39,16 @@ def usuario_():
     print(foto_perfil)
     return render_template('usuario.html', nombre = sesion[1], email = sesion[2], nombre_usuario = sesion[4], foto_perfil = foto_perfil )
 
+@app.route('/users')
+def usuarios_():
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT nombre_usuario FROM usuario')
+    nombres = cur.fetchall()
+    cur.execute('SELECT foto_perfil FROM usuario')
+    fotos = cur.fetchall()
+    print(fotos)
+    return render_template("usuarios.html", nombres = nombres, fotos = fotos)
+
 
 @app.route('/subir_foto_de_perfil', methods=['POST'])
 def subir_foto_de_perfil():
