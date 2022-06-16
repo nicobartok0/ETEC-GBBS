@@ -30,13 +30,11 @@ def principal():
     print(sesion)
     return render_template('principal.html')
 
-@app.route('/user')
+@app.route('/user') 
 def usuario_():
     cur = mysql.connection.cursor()
     cur.execute('SELECT foto_perfil FROM usuario WHERE nombre_usuario = ' + '"' + sesion[4] + '"')
     filename = cur.fetchone()
-    print(filename)
-    print(str(filename))
     foto_perfil = filename[0]
     print(foto_perfil)
     return render_template('usuario.html', nombre = sesion[1], email = sesion[2], nombre_usuario = sesion[4], foto_perfil = foto_perfil )
@@ -71,6 +69,7 @@ def add_user():
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
+        default_pfp = url_for('static', filename='img/default-A.png')
         cur = mysql.connection.cursor()
         cur.execute('SELECT * FROM usuario WHERE nombre_usuario = ' + '"' + username + '"')
         usuario_existente = cur.rowcount
@@ -78,8 +77,8 @@ def add_user():
         email_existente = cur.rowcount
         if usuario_existente <= 0 and email_existente <= 0:
             
-            cur.execute('INSERT INTO usuario (nombre_completo, email, contraseña, nombre_usuario) VALUES (%s, %s, %s, %s)', 
-            (fullname, email, password, username))
+            cur.execute('INSERT INTO usuario (nombre_completo, email, contraseña, nombre_usuario, foto_perfil) VALUES (%s, %s, %s, %s, %s)', 
+            (fullname, email, password, username, default_pfp))
             mysql.connection.commit()
             return render_template('index.html')
         else:
