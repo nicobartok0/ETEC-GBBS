@@ -149,19 +149,20 @@ def usuario():
     return render_template('correo.html')
 
 
-@app.route('/chat')
-def index():
-    return render_template('chat.html')
+@app.route('/chat', methods=['GET', 'POST'])
+def sessions():
+    return render_template('session.html', nombre_usuario = sesion[4])
 
+def messageReceived(methods=['GET', 'POST']):
+    print('message was received!!!')
 
-@socketio.on('message')
-def handleMessage(msg):
-    print('Message: ' + msg)
-    send(msg, broadcast = True)
-
+@socketio.on('my event')
+def handle_my_custom_event(json, methods=['GET', 'POST']):
+    print('received my event: ' + str(json))
+    socketio.emit('my response', json, callback=messageReceived)
 
 
 #Bucle principal. La aplicación se corre en el puerto 3000.
 if (__name__) == '__main__':
     app.run(port=3000, debug=True)
-    socketio.run(app)
+    socketio.run(app, debug=True)
