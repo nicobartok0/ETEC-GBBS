@@ -6,13 +6,13 @@
     <form action="/subir_foto_de_perfil" method="POST" enctype="multipart/form-data">
         <input type="file" name="archivo">
         <input type="submit">
-       </form>
-       
        
     </form>
     <h2>Nombre de usuario: {{nombre_usuario}}</h2>
     <h2>Email: {{email}}</h2>
     <h2>Nombre completo: {{nombre}}</h2>
-    
+    <form action="/principal">
+        <button type="submit">Salir</button>
+    </form>
 </html>
 {%endblock%}

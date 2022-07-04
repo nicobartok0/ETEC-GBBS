@@ -2,6 +2,7 @@
 from fileinput import filename
 from click import password_option
 import os
+import re
 from flask_socketio import SocketIO, send
 from flask import Flask, render_template, request, session, url_for, jsonify, redirect
 from flask_mysqldb import MySQL
@@ -43,7 +44,9 @@ def usuario_():
 def usuarios_():
     cur = mysql.connection.cursor()
     cur.execute('SELECT nombre_usuario FROM usuario')
-    nombres = cur.fetchall()
+    nombres1 = cur.fetchall()
+    nombres = re.findall(r"\b\d+(?:\.\d+)?\b",str(nombres1))
+    print(nombres)
     cur.execute('SELECT foto_perfil FROM usuario')
     fotos = cur.fetchall()
     print(fotos)
@@ -147,6 +150,8 @@ def add_forums():
 @app.route('/correo')
 def usuario():
     return render_template('correo.html')
+
+
 
 
 @app.route('/chat', methods=['GET', 'POST'])
