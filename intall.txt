@@ -1,0 +1,1 @@
+pip intall flask flask_mysqldb flask_socketio
