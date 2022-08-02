@@ -169,5 +169,5 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
 
 #Bucle principal. La aplicación se corre en el puerto 3000.
 if (__name__) == '__main__':
-    app.run(port=3000, debug=True)
+    app.run(port=5000, debug=True)
     socketio.run(app, debug=True)
